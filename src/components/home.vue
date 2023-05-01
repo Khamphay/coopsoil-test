@@ -25,53 +25,49 @@
       <div class="flex-item-lelf">
         <section>
           <div class="card">
-            <h4 style="text-align: center;">Diameter Sensor 1</h4>
             <div class='container'>
-              <apexchart type="area" height="220" :options="chartOptions" :series="series1"></apexchart>
+              <apexchart type="area" height="250" :options="chartOpS1" :series="series1"></apexchart>
             </div>
           </div>
           <div class="card">
-            <h4 style="text-align: center;">Diameter Sensor 2</h4>
             <div class='container'>
-              <apexchart type="area" height="220" :options="chartOptions" :series="series2"></apexchart>
-            </div>
-          </div>
-          <div class="card">
-            <h4 style="text-align: center;">Diameter Sensor 3</h4>
-            <div class='container'>
-              <apexchart type="area" height="220" :options="chartOptions" :series="series3"></apexchart>
-            </div>
-          </div>
-          <div class="card">
-            <h4 style="text-align: center;">Diameter Sensor 4</h4>
-            <div class='container'>
-              <apexchart type="area" height="220" :options="chartOptions" :series="series4"></apexchart>
+              <apexchart type="area" height="250" :options="chartOpS2" :series="series2"></apexchart>
             </div>
           </div>
         </section>
         <section>
           <div class="card">
-            <h4 style="text-align: center;">Diameter Sensor 5</h4>
             <div class='container'>
-              <apexchart type="area" height="220" :options="chartOptions" :series="series5"></apexchart>
+              <apexchart type="area" height="250" :options="chartOpS3" :series="series3"></apexchart>
             </div>
           </div>
           <div class="card">
-            <h4 style="text-align: center;">Diameter Sensor 6</h4>
             <div class='container'>
-              <apexchart type="area" height="220" :options="chartOptions" :series="series6"></apexchart>
+              <apexchart type="area" height="250" :options="chartOpS4" :series="series4"></apexchart>
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="card">
+            <div class='container'>
+              <apexchart type="area" height="250" :options="chartOpS5" :series="series5"></apexchart>
             </div>
           </div>
           <div class="card">
-            <h4 style="text-align: center;">Diameter Sensor 7</h4>
             <div class='container'>
-              <apexchart type="area" height="220" :options="chartOptions" :series="series7"></apexchart>
+              <apexchart type="area" height="250" :options="chartOpS6" :series="series6"></apexchart>
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="card">
+            <div class='container'>
+              <apexchart type="area" height="250" :options="chartOpS7" :series="series7"></apexchart>
             </div>
           </div>
           <div class="card">
-            <h4 style="text-align: center;">Diameter Sensor 8</h4>
             <div class='container'>
-              <apexchart type="area" height="220" :options="chartOptions" :series="series8"></apexchart>
+              <apexchart type="area" height="250" :options="chartOpS8" :series="series8"></apexchart>
             </div>
           </div>
         </section>
@@ -103,8 +99,9 @@
 <script >
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-// import axios from 'axios'
-import { io } from "socket.io-client";
+import axios from 'axios'
+import { chartOptions } from '@/model/chartOption';
+import { socket } from '@/model/socket';
 
 export default {
   name: "HomePage",
@@ -118,78 +115,32 @@ export default {
 
   data() {
     return {
-      data_log: null,
+      client: null,
+      data_log: [],
       columns: null,
-      chartOptions: {
-        chart: {
-          height: 240,
-          type: 'area',
-          stacked: false,
-          zoom: {
-            type: 'x',
-            enabled: true,
-            autoScaleYaxis: true
-          },
-          toolbar: {
-            autoSelected: 'zoom'
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          curve: 'smooth',
-          width: 1,
-        },
-        // title: { text: "Diameter Sensor 1", align: 'left' },
-        xaxis: {
-          type: "String", categories: [],
-          title: {
-            text: 'Time'
-          },
-        },
-        yaxis: {
-          title: {
-            text: 'Valtage (V)'
-          },
-          // min: 0,
-          // max: 5,
-          labels: {
-            formatter: function (val) {
-              return val.toFixed(2);
-            },
-          },
-        },
-        tooltip: {
-          shared: false,
-          y: {
-            formatter: function (val) {
-              return (val / 9000000).toFixed(0)
-            }
-          }
-        }
-
-      },
-      series1: [{ name: "Diameter Sensor 1", data: [] }],
-      series2: [{ name: "Diameter Sensor 2", data: [] }],
-      series3: [{ name: "Diameter Sensor 3", data: [] }],
-      series4: [{ name: "Diameter Sensor 4", data: [] }],
-      series5: [{ name: "Diameter Sensor 5", data: [] }],
-      series6: [{ name: "Diameter Sensor 6", data: [] }],
-      series7: [{ name: "Diameter Sensor 7", data: [] }],
-      series8: [{ name: "Diameter Sensor 8", data: [] }],
+      date: [],
+      chartOpS1: chartOptions.options[0],
+      chartOpS2: chartOptions.options[1],
+      chartOpS3: chartOptions.options[2],
+      chartOpS4: chartOptions.options[3],
+      chartOpS5: chartOptions.options[4],
+      chartOpS6: chartOptions.options[5],
+      chartOpS7: chartOptions.options[6],
+      chartOpS8: chartOptions.options[7],
+      series1: chartOptions.series[0],
+      series2: chartOptions.series[1],
+      series3: chartOptions.series[2],
+      series4: chartOptions.series[3],
+      series5: chartOptions.series[4],
+      series6: chartOptions.series[5],
+      series7: chartOptions.series[6],
+      series8: chartOptions.series[7],
     }
   },
 
   created() {
-
-    const socket = io("http://127.0.0.1:5000");
-
-    socket.on("connect", (res) => {
-      for (const item of res) {
-        console.log(item);
-      }
-    })
+    this.client = socket()
+    this.client.emit('ondata');
 
     this.columns = [{ field: 'StartDate', header: 'Start Date' },
     { field: 'DiameterSensor1', header: 'Diameter Sensor 1' },
@@ -204,23 +155,51 @@ export default {
   },
 
   mounted() {
+    this.client.on('ondata', (res) => {
+      let splDate = res.StartDate.split('.')[0];
+      let splTime = splDate.split(' ')[1];
+      res.StartDate = splDate
+      this.data_log.push(res);
+      console.log(typeof splTime);
+      this.chartOpS7.xaxis.categories.push(splTime);
+      this.chartOpS6.xaxis.categories.push(splTime);
+      this.chartOpS5.xaxis.categories.push(splTime);
+      this.chartOpS4.xaxis.categories.push(splTime);
+      this.chartOpS3.xaxis.categories.push(splTime);
+      this.chartOpS2.xaxis.categories.push(splTime);
+      this.chartOpS1.xaxis.categories.push(splTime);
 
-    // axios.get('http://127.0.0.1:5000/get/fileData').then((res) => {
-    //   this.data_log = res.data;
-
-    //   this.data_log.forEach(item => {
-    //     this.chartOptions.xaxis.categories.push(item.StartDate.split(' ')[0]);
-    //     this.series1[0].data.push(item.DiameterSensor1);
-    //     this.series2[0].data.push(item.DiameterSensor2);
-    //     // this.series3[0].data.push(item.HeightSensor3);
-    //     // this.series4[0].data.push(item.Weight);
-    //     // this.series5[0].data.push(item.CO2emission);
-    //     // this.series6[0].data.push(item.Temperature1);
-    //     // this.series7[0].data.push(item.AirHumidity);
-    //     // this.series8[0].data.push(item.Temperature2);
-    //   });
-    // });
+      this.series1[0].data.push(res.DiameterSensor1);
+      this.series2[0].data.push(res.DiameterSensor2);
+      this.series3[0].data.push(res.HeightSensor3);
+      this.series4[0].data.push(res.Weight);
+      this.series5[0].data.push(res.CO2emission);
+      this.series6[0].data.push(res.Temperature1);
+      this.series7[0].data.push(res.AirHumidity);
+      this.series8[0].data.push(res.Temperature2);
+    });
   },
+
+  methods: {
+    reloadData() {
+      axios.get('http://127.0.0.1:5000/get/fileData').then((res) => {
+        this.data_log = res.data;
+        this.data_log.forEach(item => {
+          this.chartOptions.xaxis.categories.push(item.StartDate.split(' ')[0]);
+          this.series1[0].data.push(item.DiameterSensor1);
+          this.series2[0].data.push(item.DiameterSensor2);
+          this.series3[0].data.push(item.HeightSensor3);
+          this.series4[0].data.push(item.Weight);
+          this.series5[0].data.push(item.CO2emission);
+          this.series6[0].data.push(item.Temperature1);
+          this.series7[0].data.push(item.AirHumidity);
+          this.series8[0].data.push(item.Temperature2);
+        });
+      });
+    }
+  }
+
+
 };
 </script>
 
@@ -246,7 +225,7 @@ export default {
 
 section {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
 }
 
 .card {
