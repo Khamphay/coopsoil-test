@@ -5,10 +5,13 @@ function suboption(title, titleY) {
       height: 240,
       type: "area",
       stacked: false,
+      animations: {
+        enabled: false
+      },
       zoom: {
-        type: "x",
+        // type: "x",
         enabled: true,
-        autoScaleXaxis: true
+        autoScaleYaxis: true
       },
       toolbar: {
         autoSelected: "zoom"
@@ -19,7 +22,7 @@ function suboption(title, titleY) {
     },
     stroke: {
       curve: "smooth",
-      width: 1
+      width: 1.5
     },
     title: { text: title, align: "left" },
     xaxis: {
@@ -51,7 +54,7 @@ function suboption(title, titleY) {
   };
 }
 
-export var chartOptions = {
+export var chartOps = {
   options: [
     suboption("Diameter Sensor 1", "Voltage (V)", "00 V"),
     suboption("Diameter Sensor 2", "Voltage (V)"),

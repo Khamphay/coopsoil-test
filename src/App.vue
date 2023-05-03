@@ -1,5 +1,5 @@
 <template>
-  <div class="nabar p-menubar">
+  <!-- <div class="nabar p-menubar">
     <Menubar :model="items">
       <template #start>
         <img alt="logo" src="./assets/ird.png" size="40" />
@@ -8,19 +8,19 @@
         <h2 style="margin-left: 1rem;">COOP Soil</h2>
       </template>
     </Menubar>
-  </div>
+  </div> -->
   <HomePage id="home" />
 </template>
 
 <script>
 import HomePage from "./components/home.vue";
-import Menubar from 'primevue/menubar';
+// import Menubar from 'primevue/menubar';
 
 export default {
   name: "App",
   components: {
     HomePage,
-    Menubar
+    // Menubar
   },
 };
 </script>
@@ -50,7 +50,7 @@ export default {
 }
 
 #home {
-  margin-top: 100px;
+  margin-top: 10px;
 }
 
 img {

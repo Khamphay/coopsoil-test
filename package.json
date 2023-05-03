@@ -13,6 +13,7 @@
     "core-js": "^3.8.3",
     "csv-parse": "^5.3.8",
     "fs": "^0.0.1-security",
+    "moment": "^2.29.4",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "primeicons": "^6.0.1",
     "primevue": "^3.26.1",
