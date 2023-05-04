@@ -1,4 +1,4 @@
-import moment from "moment";
+// import moment from "moment";
 function suboption(title, titleY) {
   return {
     chart: {
@@ -9,8 +9,9 @@ function suboption(title, titleY) {
         enabled: false
       },
       zoom: {
-        // type: "x",
+        type: "x",
         enabled: true,
+        autoScaleXaxis: true,
         autoScaleYaxis: true
       },
       toolbar: {
@@ -22,29 +23,28 @@ function suboption(title, titleY) {
     },
     stroke: {
       curve: "smooth",
-      width: 1.5
+      width: 1
     },
     title: { text: title, align: "left" },
     xaxis: {
-      type: "datetime",
+      type: "category",
       categories: [],
-      tickAmount: 6,
-      title: {
-        text: "Time"
-      },
-      labels: {
-        formatter: (val) => {
-          return moment(val).format("hh:mm:ss");
-        }
-      }
+      tickAmount: 6
+      // title: {
+      //   text: "Time"
+      // },
+      // labels: {
+      //   formatter: (val) => {
+      //     return moment(val).format("hh:mm:ss");
+      //   }
+      // }
     },
     tooltip: {
-      x: {
-        formatter: (val) => {
-          return moment(val).format("DD-MM-yyyy hh:mm:ss");
-        }
-      }
-      // y: { format: yFomate }
+      // x: {
+      //   formatter: (val) => {
+      //     return moment(val).format("DD-MM-yyyy hh:mm:ss");
+      //   }
+      // }
     },
     yaxis: {
       title: {

@@ -1,12 +1,13 @@
 <template>
   <div>
     <TabView>
-      <TabPanel header="Real Time Monitor">
-        <RealTimePage />
-      </TabPanel>
       <TabPanel header="All Data">
         <DataPage />
       </TabPanel>
+      <TabPanel header="Real Time Monitor">
+        <RealTimePage />
+      </TabPanel>
+
     </TabView>
   </div>
 </template>

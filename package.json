@@ -19,6 +19,7 @@
     "primevue": "^3.26.1",
     "socket.io-client": "^4.6.1",
     "vue": "^3.2.13",
+    "vue-loading-overlay": "^6.0.3",
     "vue3-apexcharts": "^1.4.1",
     "vue3-easy-data-table": "^1.5.42"
   },

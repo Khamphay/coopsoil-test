@@ -131,33 +131,39 @@ export default {
     },
 
     mounted() {
-        this.client.on('ondata', (res) => {
-            let splDateTime = res.StartDate.split('.')[0];
-            let splTime = splDateTime.split(' ');
-            let date = splTime[0].split('-');
-            let times = new Date(`${date[2]}-${date[1]}-${date[0]} ${splTime[1]}`).getTime();
-
-            res.StartDate = splDateTime;
-            this.data_log.push(res);
-
-            this.chartOpS1.xaxis.categories.push(times);
-            this.chartOpS2.xaxis.categories.push(times);
-            this.chartOpS3.xaxis.categories.push(times);
-            this.chartOpS4.xaxis.categories.push(times);
-            this.chartOpS5.xaxis.categories.push(times);
-            this.chartOpS6.xaxis.categories.push(times);
-            this.chartOpS7.xaxis.categories.push(times);
-
-            this.series1[0].data.push(parseFloat(res.DiameterSensor1).toFixed(2));
-            this.series2[0].data.push(parseFloat(res.DiameterSensor2).toFixed(2));
-            this.series3[0].data.push(parseFloat(res.HeightSensor3).toFixed(2));
-            this.series4[0].data.push(parseFloat(res.Weight).toFixed(2));
-            this.series5[0].data.push(parseFloat(res.CO2emission).toFixed(2));
-            this.series6[0].data.push(parseFloat(res.Temperature1).toFixed(2));
-            this.series7[0].data.push(parseFloat(res.AirHumidity).toFixed(2));
-            this.series8[0].data.push(parseFloat(res.Temperature2).toFixed(2));
-        });
+        this.lisentData()
     },
+
+    methods: {
+        lisentData() {
+            this.client.on('ondata', (res) => {
+                let splDateTime = res.StartDate.split('.')[0];
+                let splTime = splDateTime.split(' ');
+                let date = splTime[0].split('-');
+                let times = new Date(`${date[2]}-${date[1]}-${date[0]} ${splTime[1]}`).getTime();
+
+                res.StartDate = splDateTime;
+                this.data_log.push(res);
+
+                this.chartOpS1.xaxis.categories.push(times);
+                this.chartOpS2.xaxis.categories.push(times);
+                this.chartOpS3.xaxis.categories.push(times);
+                this.chartOpS4.xaxis.categories.push(times);
+                this.chartOpS5.xaxis.categories.push(times);
+                this.chartOpS6.xaxis.categories.push(times);
+                this.chartOpS7.xaxis.categories.push(times);
+
+                this.series1[0].data.push(parseFloat(res.DiameterSensor1).toFixed(2));
+                this.series2[0].data.push(parseFloat(res.DiameterSensor2).toFixed(2));
+                this.series3[0].data.push(parseFloat(res.HeightSensor3).toFixed(2));
+                this.series4[0].data.push(parseFloat(res.Weight).toFixed(2));
+                this.series5[0].data.push(parseFloat(res.CO2emission).toFixed(2));
+                this.series6[0].data.push(parseFloat(res.Temperature1).toFixed(2));
+                this.series7[0].data.push(parseFloat(res.AirHumidity).toFixed(2));
+                this.series8[0].data.push(parseFloat(res.Temperature2).toFixed(2));
+            });
+        }
+    }
 };
 </script>
 

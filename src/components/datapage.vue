@@ -1,57 +1,59 @@
 <template>
     <div>
-        <div class="card flex justify-content-center" style="padding: 10px">
-            <div>Select date: </div>
-            <div>
-                <Calendar v-model="date" dateFormat="dd-mm-yy" showIcon @date-select="filterData" />
-            </div>
+        <loading v-model:active="isLoading" :is-full-page="fullPage" :color="color" width="128" height="128" />
+        <div class="card flex justify-content-center flex-wrap gap-3" style="padding: 10px">
+            <label>Select date: </label>
+            <!-- <div> -->
+            <Calendar v-model="date" dateFormat="dd-mm-yy" showIcon @date-select="filterData" style="margin: 2px 30px 0px 0px;" />
+            <!-- </div> -->
+            <Button label="Refresh" severity="success" outlined @click="loadData" />
         </div>
         <div class="flex-item-lelf">
             <section>
                 <div class="card">
                     <div class='container'>
-                        <apexchart type="area" height="250" :options="chartOpS1" :series="series1"></apexchart>
+                        <apexchart ref="dataChart" type="area" height="250" :options="chartOpS1" :series="series1"></apexchart>
                     </div>
                 </div>
                 <div class="card">
                     <div class='container'>
-                        <apexchart type="area" height="250" :options="chartOpS2" :series="series2"></apexchart>
-                    </div>
-                </div>
-            </section>
-            <section>
-                <div class="card">
-                    <div class='container'>
-                        <apexchart type="area" height="250" :options="chartOpS3" :series="series3"></apexchart>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class='container'>
-                        <apexchart type="area" height="250" :options="chartOpS4" :series="series4"></apexchart>
+                        <apexchart ref="dataChart" type="area" height="250" :options="chartOpS2" :series="series2"></apexchart>
                     </div>
                 </div>
             </section>
             <section>
                 <div class="card">
                     <div class='container'>
-                        <apexchart type="area" height="250" :options="chartOpS5" :series="series5"></apexchart>
+                        <apexchart ref="dataChart" type="area" height="250" :options="chartOpS3" :series="series3"></apexchart>
                     </div>
                 </div>
                 <div class="card">
                     <div class='container'>
-                        <apexchart type="area" height="250" :options="chartOpS6" :series="series6"></apexchart>
+                        <apexchart ref="dataChart" type="area" height="250" :options="chartOpS4" :series="series4"></apexchart>
                     </div>
                 </div>
             </section>
             <section>
                 <div class="card">
                     <div class='container'>
-                        <apexchart type="area" height="250" :options="chartOpS7" :series="series7"></apexchart>
+                        <apexchart ref="dataChart" type="area" height="250" :options="chartOpS5" :series="series5"></apexchart>
                     </div>
                 </div>
                 <div class="card">
                     <div class='container'>
-                        <apexchart type="area" height="250" :options="chartOpS8" :series="series8"></apexchart>
+                        <apexchart ref="dataChart" type="area" height="250" :options="chartOpS6" :series="series6"></apexchart>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="card">
+                    <div class='container'>
+                        <apexchart ref="dataChart" type="area" height="250" :options="chartOpS7" :series="series7"></apexchart>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class='container'>
+                        <apexchart ref="dataChart" type="area" height="250" :options="chartOpS8" :series="series8"></apexchart>
                     </div>
                 </div>
             </section>
@@ -87,6 +89,9 @@ import { chartOps } from '@/model/chartOption2';
 import { ref } from 'vue'
 import Calendar from 'primevue/calendar';
 import moment from 'moment'
+import Button from 'primevue/button';
+
+
 const date = ref();
 
 export default {
@@ -97,11 +102,15 @@ export default {
     components: {
         DataTable,
         Column,
-        Calendar
+        Calendar,
+        Button
     },
 
     data() {
         return {
+            isLoading: true,
+            fullPage: true,
+            color: '#0AC5A0',
             data_log: [],
             filterDate: [],
             columns: null,
@@ -114,6 +123,7 @@ export default {
             chartOpS6: chartOps.options[5],
             chartOpS7: chartOps.options[6],
             chartOpS8: chartOps.options[7],
+
             series1: chartOps.series[0],
             series2: chartOps.series[1],
             series3: chartOps.series[2],
@@ -136,29 +146,81 @@ export default {
         { field: 'Temperature2', header: 'Temp 2' },
         { field: 'Weight', header: 'Weight' },
         ];
-    },
 
-    mounted() {
         this.loadData();
     },
 
+    mounted() {
+        // this.loadData();
+    },
+
     methods: {
+
         loadData() {
-            axios.get('http://100.93.101.37:8000/get/fileData').then((res) => {
+            this.isLoading = true;
+            axios.get('http://127.0.0.1:5000/get/fileData').then(res => {
                 this.data_log = res.data;
-                this.fillDate(this.data_log);
-            })
+                this.fillDate2(this.data_log);
+            });
+
         },
 
         filterData() {
             let dateStr = moment(this.date).format('DD-MM-YYYY');
             let fltDate = this.data_log.filter((a) => a.StartDate.split(' ')[0] == dateStr);
-            this.fillDate(fltDate);
+            this.fillDate2(fltDate);
         },
 
-        fillDate(data) {
+        fillDate1(data) {
             this.filterDate = data;
-            // let times = []
+            let times = [];
+            let sr1 = [];
+            let sr2 = [];
+            let sr3 = [];
+            let sr4 = [];
+            let sr5 = [];
+            let sr6 = [];
+            let sr7 = [];
+            let sr8 = [];
+
+            data.forEach(item => {
+                let splTime = item.StartDate.split(' ');
+                // let date = splTime[0].split('-');
+
+                times.push(splTime[1]);
+
+                sr1.push(parseFloat(item.DiameterSensor1).toFixed(2));
+                sr2.push(parseFloat(item.DiameterSensor2).toFixed(2));
+                sr3.push(parseFloat(item.HeightSensor3).toFixed(2));
+                sr4.push(parseFloat(item.Weight).toFixed(2));
+                sr5.push(parseFloat(item.CO2emission).toFixed(2));
+                sr6.push(parseFloat(item.Temperature1).toFixed(2));
+                sr7.push(parseFloat(item.AirHumidity).toFixed(2));
+                sr8.push(parseFloat(item.Temperature2).toFixed(2));
+            });
+
+            this.chartOpS1.xaxis.categories = times;
+            this.chartOpS2.xaxis.categories = times;
+            this.chartOpS3.xaxis.categories = times;
+            this.chartOpS4.xaxis.categories = times;
+            this.chartOpS5.xaxis.categories = times;
+            this.chartOpS6.xaxis.categories = times;
+            this.chartOpS7.xaxis.categories = times;
+
+            this.series1[0].data = sr1;
+            this.series2[0].data = sr2;
+            this.series3[0].data = sr3;
+            this.series4[0].data = sr4;
+            this.series5[0].data = sr5;
+            this.series6[0].data = sr6;
+            this.series7[0].data = sr7;
+            this.series8[0].data = sr8;
+
+            this.isLoading = false;
+        },
+
+        fillDate2(data) {
+            this.filterDate = data;
             this.chartOpS1.xaxis.categories = [];
             this.chartOpS2.xaxis.categories = [];
             this.chartOpS3.xaxis.categories = [];
@@ -166,6 +228,7 @@ export default {
             this.chartOpS5.xaxis.categories = [];
             this.chartOpS6.xaxis.categories = [];
             this.chartOpS7.xaxis.categories = [];
+            this.chartOpS8.xaxis.categories = [];
 
             this.series1[0].data = [];
             this.series2[0].data = [];
@@ -176,7 +239,7 @@ export default {
             this.series7[0].data = [];
             this.series8[0].data = [];
 
-            for (const item of this.filterDate) {
+            data.forEach(item => {
                 let splTime = item.StartDate.split(' ');
                 let date = splTime[0].split('-');
                 let times = new Date(`${date[2]}-${date[1]}-${date[0]} ${splTime[1]}`).getTime();
@@ -188,6 +251,7 @@ export default {
                 this.chartOpS5.xaxis.categories.push(times);
                 this.chartOpS6.xaxis.categories.push(times);
                 this.chartOpS7.xaxis.categories.push(times);
+                this.chartOpS8.xaxis.categories.push(times);
 
                 this.series1[0].data.push(parseFloat(item.DiameterSensor1).toFixed(2));
                 this.series2[0].data.push(parseFloat(item.DiameterSensor2).toFixed(2));
@@ -197,35 +261,25 @@ export default {
                 this.series6[0].data.push(parseFloat(item.Temperature1).toFixed(2));
                 this.series7[0].data.push(parseFloat(item.AirHumidity).toFixed(2));
                 this.series8[0].data.push(parseFloat(item.Temperature2).toFixed(2));
+            });
 
-                // times.push(new Date(`${date[2]}-${date[1]}-${date[0]} ${splTime[1]}`).getTime());
+            // this.$refs.dataChart.updateSeries([{
+            //     data: this.series1[0].data,
+            // }], false, true);
 
-                // sr1.push(parseFloat(item.DiameterSensor1).toFixed(2));
-                // sr2.push(parseFloat(item.DiameterSensor2).toFixed(2));
-                // sr3.push(parseFloat(item.HeightSensor3).toFixed(2));
-                // sr4.push(parseFloat(item.Weight).toFixed(2));
-                // sr5.push(parseFloat(item.CO2emission).toFixed(2));
-                // sr6.push(parseFloat(item.Temperature1).toFixed(2));
-                // sr7.push(parseFloat(item.AirHumidity).toFixed(2));
-                // sr8.push(parseFloat(item.Temperature2).toFixed(2));
-            }
+            // let stSplit = data[0].StartDate.split(' ');
+            // let stdate = stSplit[0].split('-');
+            // let st = new Date(`${stdate[2]}-${stdate[1]}-${stdate[0]} ${stSplit[1]}`).getTime();
 
-            // this.chartOpS1.xaxis.categories = times;
-            // this.chartOpS2.xaxis.categories = times;
-            // this.chartOpS3.xaxis.categories = times;
-            // this.chartOpS4.xaxis.categories = times;
-            // this.chartOpS5.xaxis.categories = times;
-            // this.chartOpS6.xaxis.categories = times;
-            // this.chartOpS7.xaxis.categories = times;
+            // let enSplit = data[0].StartDate.split(' ');
+            // let endate = enSplit[0].split('-');
+            // let en = new Date(`${endate[2]}-${endate[1]}-${endate[0]} ${enSplit[1]}`).getTime();
 
-            // this.series1[0].data = sr1;
-            // this.series2[0].data = sr2;
-            // this.series3[0].data = sr3;
-            // this.series4[0].data = sr4;
-            // this.series5[0].data = sr5;
-            // this.series6[0].data = sr6;
-            // this.series7[0].data = sr7;
-            // this.series8[0].data = sr8;
+            // this.chartOpS1.chart.zoomX(
+            //     st,
+            //     en
+            // )
+            this.isLoading = false;
         }
     },
 };
