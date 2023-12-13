@@ -135,6 +135,9 @@ export default {
         }
     },
 
+    beforeCreate() {
+    },
+
     created() {
         this.columns = [{ field: 'StartDate', header: 'Start Date' },
         { field: 'DiameterSensor1', header: 'Diameter Sensor 1' },
@@ -147,11 +150,11 @@ export default {
         { field: 'Weight', header: 'Weight' },
         ];
 
-        this.loadData();
+
     },
 
     mounted() {
-        // this.loadData();
+        this.loadData();
     },
 
     methods: {

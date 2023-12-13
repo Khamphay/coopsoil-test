@@ -6,17 +6,16 @@ import VueApexCharts from "vue3-apexcharts";
 import Loading from "vue-loading-overlay";
 
 import "vue3-easy-data-table/dist/style.css";
-//theme
 import "primevue/resources/themes/bootstrap4-light-purple/theme.css";
-//core
 import "primevue/resources/primevue.min.css";
-//Icon
 import "primeicons/primeicons.css";
-//Loading css
 import "vue-loading-overlay/dist/css/index.css";
+
+import router from "./routers/routes";
 
 const app = createApp(App);
 app.component("EasyDataTable", Vue3EasyDataTable).component("loading", Loading);
+app.use(router);
 app.use(PrimeVue).use(VueApexCharts).use(Loading, {
   color: "#0AC5A0",
   width: 128,
